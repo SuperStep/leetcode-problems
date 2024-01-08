@@ -1,11 +1,20 @@
-# Write your MySQL query statement below
-select t.*, sum(case when e.subject_name is null then 0 else 1 end) as attended_exams from (
-select s.student_id, s.student_name, sb.subject_name
-from Students s
-inner join Subjects sb
-on true ) t
-left join Examinations e
-on e.student_id = t.student_id
-and e.subject_name = t.subject_name
-GROUP BY t.student_id, t.student_name, t.subject_name
-order by s.student_id, sb.subject_name
+-- Write your PostgreSQL query statement below
+WITH StudentSubjects AS (
+    SELECT
+        s.student_id,
+        sub.subject_name,
+        COALESCE(COUNT(e.subject_name), 0) as attended_exams
+    FROM Students s
+    CROSS JOIN Subjects sub
+    LEFT JOIN Examinations e ON s.student_id = e.student_id AND sub.subject_name = e.subject_name
+    GROUP BY s.student_id, sub.subject_name
+)
+
+SELECT
+    ss.student_id,
+    s.student_name,
+    ss.subject_name,
+    ss.attended_exams
+FROM StudentSubjects ss
+JOIN Students s ON ss.student_id = s.student_id
+ORDER BY ss.student_id, ss.subject_name;
