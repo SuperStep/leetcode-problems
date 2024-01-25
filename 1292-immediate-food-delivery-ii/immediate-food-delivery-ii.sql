@@ -1,12 +1,15 @@
-select round(sum(tt.total), 2) as immediate_percentage
-from(
-select 
-    cast(100 * sum(case when t.d1 = t.d2 then 1 else 0 end) as Decimal)/
-    count(*) over() as total
-from
-(
-select customer_id, MIN(order_date) as d1, min(customer_pref_delivery_date) as d2
-from Delivery
-group by customer_id) as t
-group by t.customer_id
-) tt
+WITH first_orders AS (
+    SELECT
+        customer_id
+        , MIN(order_date) first_date
+    FROM Delivery
+    GROUP BY customer_id
+)
+
+SELECT
+    -- *
+    ROUND(100.0 * COUNT(fo.first_date) FILTER (WHERE fo.first_date = D.customer_pref_delivery_date)/COUNT(*),2) AS immediate_percentage
+FROM Delivery AS D
+JOIN first_orders AS fo
+    ON D.customer_id = fo.customer_id
+    AND D.order_date = fo.first_date
