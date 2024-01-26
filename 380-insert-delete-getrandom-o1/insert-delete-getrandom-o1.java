@@ -1,40 +1,39 @@
 class RandomizedSet {
-    Random rand  = new Random();
-    private Map<Integer , Integer> map ;
-    private ArrayList<Integer> list ;
-    
+    private final Random random = new Random();
+    private final Map<Integer, Integer> map = new HashMap<>();
+    private int[] vals = new int[32];
+    private int i = 0;
+
     public RandomizedSet() {
-        map = new HashMap<>();
-        list = new ArrayList<>();
+        
     }
-
-    public boolean search (int val){
-        return map.containsKey(val);
-    }
-
+    
     public boolean insert(int val) {
-        if(search(val)) return false;
+        Integer added = map.putIfAbsent(val, i);
+        if (added != null) return false;
 
-        list.add(val);
-        map.put(val , list.size() - 1);
+        if (i >= vals.length) {
+            vals = Arrays.copyOf(vals, vals.length * 2);
+        }
+        vals[i++] = val;
         return true;
     }
     
     public boolean remove(int val) {
-        if(!search(val)) return false;
+        Integer removed = map.remove(val);
+        if (removed == null) return false;
 
-        int index = map.get(val);
-        list.set(index , list.get(list.size() - 1));
-        map.put(list.get(index) , index);
-        list.remove(list.size() - 1);
-        map.remove(val);
-         return true;
+        if (removed < i - 1) {
+            vals[removed] = vals[i-1];
+            map.put(vals[i-1], removed);
+        }
+        i--;
+        return true;
     }
     
     public int getRandom() {
-        int max = list.size();
-        int randChoice = rand.nextInt(max);
-        return list.get(randChoice);
+        int index = random.nextInt(i);
+        return vals[index];
     }
 }
 
