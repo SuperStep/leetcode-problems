@@ -1,15 +1,21 @@
 class Solution {
     public int hIndex(int[] citations) {
-              Arrays.sort(citations);
-        
         int n = citations.length;
-        for (int i = 0; i < n; i++) {
-            int h = n - i;
-            if (citations[i] >= h) {
-                return h;
-            }
+    int[] buckets = new int[n+1];
+    for(int c : citations) {
+        if(c >= n) {
+            buckets[n]++;
+        } else {
+            buckets[c]++;
         }
-
-        return 0;
+    }
+    int count = 0;
+    for(int i = n; i >= 0; i--) {
+        count += buckets[i];
+        if(count >= i) {
+            return i;
+        }
+    }
+    return 0;
     }
 }
