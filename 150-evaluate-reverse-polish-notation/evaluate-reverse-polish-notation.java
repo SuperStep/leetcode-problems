@@ -1,38 +1,37 @@
 class Solution {
+    
+    static Set<String> operations = new HashSet<>(Arrays.asList("+","-","*","/"));
+    
     public int evalRPN(String[] tokens) {
+
         Stack<Integer> stack = new Stack<>();
 
-        for (String token : tokens) {
-            if (isOperator(token)) {
-                int operand2 = stack.pop();
-                int operand1 = stack.pop();
-                int result = performOperation(operand1, operand2, token);
-                stack.push(result);
-            } else {
-                stack.push(Integer.parseInt(token));
+        for (String token: tokens) {
+            if(isOperation(token)) {
+                int a = stack.pop();
+                int b = stack.pop();
+                int res = evaluate(b,a,token);
+                stack.push(res);
+            }
+            else {
+                stack.push(Integer.valueOf(token));
             }
         }
-
         return stack.pop();
-        
     }
 
-    private static boolean isOperator(String token) {
-        return token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/");
-    }
-    
-    private static int performOperation(int operand1, int operand2, String operator) {
-        switch (operator) {
-            case "+":
-                return operand1 + operand2;
-            case "-":
-                return operand1 - operand2;
-            case "*":
-                return operand1 * operand2;
-            case "/":
-                return operand1 / operand2; // Integer division (truncate towards zero)
+        private static int evaluate(int a, int b, String token) {
+        switch (token) {
+            case "+": return a + b;
+            case "-": return a - b;
+            case "*": return a * b;
+            case "/": return a / b;
             default:
-                throw new IllegalArgumentException("Invalid operator: " + operator);
+                return 0;
         }
+    }
+
+    private static boolean isOperation(String token) {
+        return operations.contains(token);
     }
 }
