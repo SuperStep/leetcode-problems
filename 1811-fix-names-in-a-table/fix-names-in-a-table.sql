@@ -1,5 +1,6 @@
 -- Write your PostgreSQL query statement below
-select user_id, upper(substring(name from 1 for 1))
-|| lower(substring(name from 2 for char_length(name))) as name
-from Users
-order by user_id
+SELECT
+user_id,
+UPPER(LEFT(name, 1)) || LOWER(RIGHT(name, -1)) AS name
+FROM Users
+ORDER BY user_id
