@@ -1,4 +1,6 @@
-select lead(salary) over (order by salary desc) as SecondHighestSalary
-from (select distinct salary from Employee order by salary desc limit 2) 
-order by salary desc
-limit 1
+SELECT (
+    SELECT DISTINCT salary
+    FROM Employee
+    ORDER BY salary desc
+    LIMIT 1 OFFSET 1
+) as SecondHighestSalary;
