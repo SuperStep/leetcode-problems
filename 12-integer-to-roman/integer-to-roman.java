@@ -1,33 +1,58 @@
 class Solution {
     public String intToRoman(int num) {
-        // Create a TreeMap to store Roman numeral symbols and their values
-        TreeMap<Integer, String> map = new TreeMap<>();
-        map.put(1000, "M");
-        map.put(900, "CM");
-        map.put(500, "D");
-        map.put(400, "CD");
-        map.put(100, "C");
-        map.put(90, "XC");
-        map.put(50, "L");
-        map.put(40, "XL");
-        map.put(10, "X");
-        map.put(9, "IX");
-        map.put(5, "V");
-        map.put(4, "IV");
-        map.put(1, "I");
+        StringBuilder ans = new StringBuilder();
 
-        StringBuilder result = new StringBuilder();
-        
-        // Iterate through the symbols in descending order
-        for (int value : map.descendingKeySet()) {
-            // While the given integer is greater than or equal to the value of the current symbol
-            while (num >= value) {
-                // Subtract the value of the symbol from the integer and append the symbol to the result
-                num -= value;
-                result.append(map.get(value));
-            }
+        while( num > 999 ){
+            ans.append('M');
+            num -= 1000;
         }
-        
-        return result.toString();
+
+        if( num > 899 ){
+            ans.append("CM");
+            num -= 900;
+        } else if( num > 499 ) {
+            ans.append('D');
+            num -= 500;
+        } else if( num > 399 ) {
+            ans.append("CD");
+            num -= 400;
+        }
+
+        while( num > 99 ) {
+            ans.append('C');
+            num -= 100;
+        }
+        if( num > 89 ) {
+            ans.append("XC");
+            num -= 90;
+        } else if( num > 49 ){
+            ans.append( 'L' );
+            num -= 50;
+        } else if( num > 39 ){
+            ans.append("XL");
+            num -= 40;
+        }
+
+        while( num > 9 ){
+            ans.append('X');
+            num -= 10;
+        }
+        if( num > 8 ){
+            ans.append("IX");
+            num -= 9;
+        } else if( num > 4 ){
+            ans.append('V');
+            num -= 5;
+        } else if( num > 3 ){
+            ans.append("IV");
+            num -= 4;
+        }
+
+        while( num > 0 ){
+            ans.append('I');
+            num -= 1;
+        }
+
+        return ans.toString();
     }
 }
