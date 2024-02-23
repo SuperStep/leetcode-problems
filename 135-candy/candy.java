@@ -1,6 +1,6 @@
 class Solution {
     public int candy(int[] ratings) {
-int n = ratings.length;
+        int n = ratings.length;
         int[] candies = new int[n];
         Arrays.fill(candies, 1); // Initially assign each child 1 candy
 
