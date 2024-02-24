@@ -1,29 +1,28 @@
 class Solution {
     public String convert(String s, int numRows) {
-        if (numRows == 1 || numRows >= s.length()) {
+        if (numRows == 1) {
             return s;
         }
 
-        List<StringBuilder> rows = new ArrayList<>();
-        for (int i = 0; i < Math.min(numRows, s.length()); i++) {
-            rows.add(new StringBuilder());
-        }
-
-        int row = 0, direction = 1;
-        for (char c : s.toCharArray()) {
-            rows.get(row).append(c);
-            if (row == 0) {
-                direction = 1;
-            } else if (row == numRows - 1) {
-                direction = -1;
+        char[] chars = s.toCharArray();
+        char[] result = new char[chars.length];
+        int gap = 2*numRows - 2;
+        int i, j, k, l;
+        for (i=0,j=0; i<numRows; i++) {
+            if (i > 0 && i < numRows-1) {
+                for (k=i,l=gap-i; l<chars.length; k+=gap,l+=gap) {
+                    result[j++] = chars[k];
+                    result[j++] = chars[l];
+                }
+                if (k < chars.length) {
+                    result[j++] = chars[k];
+                }
+            } else {
+                for (k=i; k<chars.length; k+=gap) {
+                    result[j++] = chars[k];
+                }
             }
-            row += direction;
         }
-
-        StringBuilder result = new StringBuilder();
-        for (StringBuilder rowString : rows) {
-            result.append(rowString);
-        }
-        return result.toString();
+        return new String(result);
     }
 }
